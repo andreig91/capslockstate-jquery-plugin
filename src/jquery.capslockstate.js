@@ -93,6 +93,17 @@
 				helpers.hasStateChange(previousState, capsLockState);
 			});
 
+			// On MacIntel Chrome and Safari when the Caps Lock is deactivated
+			// it fires only a keyup event and no keydown event.
+			if (/MacIntel/.test(window.navigator.platform)) {
+				// Check if key was Caps Lock key
+				$('body').bind("keyup.capslockstate", function (event) {
+					var previousState = capsLockState;
+					capsLockState = helpers.isCapslockKey(event);
+					helpers.hasStateChange(previousState, capsLockState);
+				});
+			}
+
 			// If the window loses focus then we no longer know the state
 			$(window).bind("focus.capslockstate", function() {
 				var previousState = capsLockState;
